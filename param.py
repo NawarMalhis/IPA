@@ -1,5 +1,6 @@
 # input_fasta = 'input.fasta'
 # output_path = "output/"
+aff_path = '/home/nmalhis/Papers/AFF/'
 af2_cif_path = "cif/"
 download_cif = True
 

@@ -35,6 +35,7 @@ def get_p_features(seq, _p, w1, w2, skip=0):
     for ii, aa in enumerate(_p):
         aa_map[aa] = ii
     _pad = '-' * w
+    # print(seq, flush=True)
     p2_seq = list(_pad + seq + _pad)
     for ii, aa in enumerate(p2_seq):
         if aa not in aa_map:
@@ -85,17 +86,18 @@ def get_p_features(seq, _p, w1, w2, skip=0):
     return features
 
 
-def gen_features_p(ac, seq, _w1=15, _w2=20, _skip=0):
+def gen_features_p(ac, seq, _w1=15, _w2=20, _skip=0, dbg=False):
     _p = read_p_matrix_dict1(f"stuff/P.tsv")
     features = get_p_features(seq=seq, _p=_p, w1=_w1, w2=_w2, skip=_skip)
-    features_file = f"features/P.f"
-    with open(features_file, 'w') as fout:
-        print(f"# AC ...:\t{ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
-        print(f"# Feature\tw1\t{_w1}", file=fout)
-        print(f"# Feature\tw2\t{_w2}", file=fout)
-        print("#", file=fout)
-        for ii in range(len(features['w1'])):
-            print(f"{ii + 1}\t{features['w1'][ii]:.4}\t{features['w2'][ii]:.4}", file=fout)
+    if dbg:
+        features_file = f"features/P.f"
+        with open(features_file, 'w') as fout:
+            print(f"# AC ...:\t{ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
+            print(f"# Feature\tw1\t{_w1}", file=fout)
+            print(f"# Feature\tw2\t{_w2}", file=fout)
+            print("#", file=fout)
+            for ii in range(len(features['w1'])):
+                print(f"{ii + 1}\t{features['w1'][ii]:.4}\t{features['w2'][ii]:.4}", file=fout)
     return features
 
 
@@ -111,25 +113,33 @@ def read_counts(in_file):
     return ret
 
 
-def gen_features_counts(ac, seq):
+def gen_features_counts(ac, seq, dbg=False):
     features_counts = {'PDB': [], 'IDR': [], 'Linker': [], 'P_bind': [], 'N_bind': []}
     _pp_features = read_counts(in_file="stuff/LNPPI.tsv")
-    features_file = "features/aac.f"
-    with open(features_file, 'w') as fout:
-        print(f"# AC ...:\t{ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
-        for tg in ['PDB', 'IDR', 'Linker', 'P_bind', 'N_bind']:
-            print(f"# Feature\tf{tg}", file=fout)
-        print("#", file=fout)
+    if dbg:
+        features_file = "features/aac.f"
+        with open(features_file, 'w') as fout:
+            print(f"# AC ...:\t{ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
+            for tg in ['PDB', 'IDR', 'Linker', 'P_bind', 'N_bind']:
+                print(f"# Feature\tf{tg}", file=fout)
+            print("#", file=fout)
+            for ii, aa in enumerate(seq):
+                print(f"{ii + 1}", end='', file=fout)
+                for tg in ['PDB', 'IDR', 'Linker', 'P_bind', 'N_bind']:
+                    if aa in _pp_features[tg]:
+                        print(f"\t{_pp_features[tg][aa]:.5}", end='', file=fout)
+                        features_counts[tg].append(_pp_features[tg][aa])
+                    else:
+                        print(f"\t50.0", end='', file=fout)
+                        features_counts[tg].append(50.0)
+                print(file=fout)
+    else:
         for ii, aa in enumerate(seq):
-            print(f"{ii + 1}", end='', file=fout)
             for tg in ['PDB', 'IDR', 'Linker', 'P_bind', 'N_bind']:
                 if aa in _pp_features[tg]:
-                    print(f"\t{_pp_features[tg][aa]:.5}", end='', file=fout)
                     features_counts[tg].append(_pp_features[tg][aa])
                 else:
-                    print(f"\t50.0", end='', file=fout)
                     features_counts[tg].append(50.0)
-            print(file=fout)
     return features_counts
 
 
@@ -179,9 +189,8 @@ def get_af2(ac, part=1):
         return False  # Connection error, file may not exist or server is unreachable
 
 
-def gen_features_alpha_fold(in_ac, in_seq):
+def gen_features_alpha_fold(in_ac, in_seq, dbg=False):
     max_sasa = read_max_sasa("stuff/AminoAcids.tsv")
-    features_file = f"features/AlphaFold.f"
     cif_file = f"{af2_cif_path}{in_ac}.cif"  # cif_file_name(ac)
     if os.path.exists(cif_file):
         seq, dta = get_cif_data(cif_file, max_sasa)
@@ -189,13 +198,19 @@ def gen_features_alpha_fold(in_ac, in_seq):
             print(f"(Inconsistent {in_ac} cif file)", end='\t')
             return None
         features_cif = {'pLDDt': [], 'RSA': []}
-        with open(features_file, 'w') as fout:
-            print(f"# AC ...:\t{in_ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
-            print(f"# Feature\tpLDDT", file=fout)
-            print(f"# Feature\tRSA", file=fout)
-            print("#", file=fout)
+        if dbg:
+            features_file = f"features/AlphaFold.f"
+            with open(features_file, 'w') as fout:
+                print(f"# AC ...:\t{in_ac}\n# length:\t{len(seq):,}\n# Seq ..:\t{seq}\n#", file=fout)
+                print(f"# Feature\tpLDDT", file=fout)
+                print(f"# Feature\tRSA", file=fout)
+                print("#", file=fout)
+                for ii, ln_dict in enumerate(dta):
+                    print(f"{ii+1}\t{ln_dict['pLDDT']}\t{ln_dict['RSA']:.5}", file=fout)
+                    features_cif['pLDDt'].append(ln_dict['pLDDT'])
+                    features_cif['RSA'].append(ln_dict['RSA'] * 20)
+        else:
             for ii, ln_dict in enumerate(dta):
-                print(f"{ii+1}\t{ln_dict['pLDDT']}\t{ln_dict['RSA']:.5}", file=fout)
                 features_cif['pLDDt'].append(ln_dict['pLDDT'])
                 features_cif['RSA'].append(ln_dict['RSA'] * 20)
         return features_cif
@@ -208,7 +223,18 @@ def assemble_af2_features(in_ac, in_seq, dbg=True):
     _af = False
     ac_list = get_ac_list(seq=in_seq)
     # print(ac_list)
+    tmp_list = list(ac_list)
+    for ac in tmp_list:
+        if '.' in ac:
+            ac_list.remove(ac)
+            continue
+        if '-' in ac:
+            ac0 = ac.split('-')[0]
+            if ac0 not in ac_list:
+                ac_list.append(ac0)
     for ac in ac_list:
+        if '.' in ac:
+            continue
         if not os.path.isfile(f"{af2_cif_path}{ac}.cif"):
             if download_cif:
                 get_af2(ac, part=1)
