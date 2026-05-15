@@ -11,3 +11,4 @@ dependencies:
   - pip:
     - crc64iso
     - biopython
+    - requests
