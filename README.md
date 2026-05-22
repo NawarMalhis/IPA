@@ -57,3 +57,6 @@ IPA will create a directory "results" inside PATH to store all IPA predictions.
 python3 ipa.py -p test_data/ -in input.fasta
 python3 ipa.py -p test_data/ -in input.fasta –af2
 ```
+
+## HTML Interface
+[https://ipa.msl.ubc.ca]
