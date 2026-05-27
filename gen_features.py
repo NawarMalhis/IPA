@@ -172,7 +172,7 @@ def cif_file_name(ac):
 
 
 def get_af2(ac, part=1):
-    url = f"https://alphafold.ebi.ac.uk/files/AF-{ac}-F{part}-model_v4.cif"
+    url = f"https://alphafold.ebi.ac.uk/files/AF-{ac}-F{part}-model_v6.cif"
     try:
         print(f"\t\tExtracting AlphaFold-2 structure for {ac}:\t", end='')
         response = requests.get(url)
