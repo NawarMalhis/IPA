@@ -19,7 +19,7 @@ git clone https://github.com/NawarMalhis/IPA.git
 git clone https://github.com/NawarMalhis/AFF.git
 # Change directory:	
 cd IPA
-# Update the path to the AFF (annotated fasta format) folder in param.py
+# Update the path to the AFF (annotated fasta format) folder in __param.py__
 aff_path = '/xxx/xxx/AFF/'
 # Create an ipa_cpu or ipa_cuda environment:
 conda env create -f ipa_cuda.yml
