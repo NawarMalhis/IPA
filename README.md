@@ -13,16 +13,18 @@ CPU: Multicore with 4+ cores recommended.
 
 ## To install:
 ```bash
+<pre>
 # Clone IPA
 git clone https://github.com/NawarMalhis/IPA.git
 # Clone the "annotated fasta format" library:	
 git clone https://github.com/NawarMalhis/AFF.git
 # Change directory:	
 cd IPA
-# Update the path to the AFF (annotated fasta format) folder in param.py
+# Update the path to the AFF (annotated fasta format) folder in <b>param.py</b>.
 aff_path = '/xxx/xxx/AFF/'
 # Create an ipa_cpu or ipa_cuda environment:
 conda env create -f ipa_cuda.yml
+</pre>
 ```
 
 ## Input data:
