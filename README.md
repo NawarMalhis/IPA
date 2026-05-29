@@ -6,6 +6,9 @@ nucleic) IDR binding sites within protein amino acid sequences.
 ### Please reference the following publications:
 Malhis N, "Probabilistic Annotations of Protein Sequences for Intrinsically Disordered Features" bioRxiv (2024). [doi: https://doi.org/10.1101/2024.12.18.629275].
 
+## HTML Interface
+[https://ipa.msl.ubc.ca]
+
 ## Minimum Hardware Requirements
 OS: Linux (tested on Ubuntu and CentOS7).  
 RAM: 8 GB minimum, 16 GB recommended.  
@@ -57,6 +60,3 @@ IPA will create a directory "results" inside PATH to store all IPA predictions.
 python3 ipa.py -p test_data/ -in input.fasta
 python3 ipa.py -p test_data/ -in input.fasta –af2
 ```
-
-## HTML Interface
-[https://ipa.msl.ubc.ca]
