@@ -4,11 +4,10 @@ channels:
   - nvidia
   - defaults
 dependencies:
-  - pytorch
-  - torchvision
-  - torchaudio
-  - pytorch-cuda=11.8
   - pip:
     - crc64iso
     - biopython
+    - torch
+    - torchvision
+    - torchaudio
     - requests
