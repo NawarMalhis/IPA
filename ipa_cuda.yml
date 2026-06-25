@@ -2,12 +2,16 @@ name: ipa_cuda
 channels:
   - pytorch
   - nvidia
+  - conda-forge
   - defaults
 dependencies:
+  - python
+  - cuda-version=12.4
+  - pytorch
+  - torchvision
+  - pytorch-cuda=12.4
+  - torchaudio
+  - biopython
+  - requests
   - pip:
     - crc64iso
-    - biopython
-    - torch
-    - torchvision
-    - torchaudio
-    - requests
