@@ -14,7 +14,6 @@ if aff_path not in sys.path:
 
 from annotated_fasta import aff_load_fasta
 
-
 if __name__ == '__main__':
     arg = get_arguments()
     input_fasta = f"{arg.path}/{arg.in_file}"
@@ -30,6 +29,14 @@ if __name__ == '__main__':
     models = load_models(device=device, af2=arg.AlphaFold2, verbose=False)
     priors_dict = load_priors()
     af = aff_load_fasta(input_fasta)
+
+    for ac in af['data']:
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('B', 'N')
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('Z', 'Q')
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('J', 'L')
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('U', 'C')
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('O', 'K')
+        af['data'][ac]['seq'] = af['data'][ac]['seq'].replace('X', 'A')
 
     print(f"Sequence count:\t{len(af['data']):,}")
     if arg.AlphaFold2:
