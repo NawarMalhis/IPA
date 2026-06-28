@@ -194,7 +194,7 @@ def gen_features_alpha_fold(in_ac, in_seq, dbg=False):
     cif_file = f"{af2_cif_path}{in_ac}.cif"  # cif_file_name(ac)
     if os.path.exists(cif_file):
         seq, dta = get_cif_data(cif_file, max_sasa)
-        if seq != in_seq:
+        if len(seq) != len(in_seq):
             print(f"(Inconsistent {in_ac} cif file)", end='\t')
             return None
         features_cif = {'pLDDt': [], 'RSA': []}
