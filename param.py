@@ -2,7 +2,7 @@
 # output_path = "output/"
 aff_path = '/home/nmalhis/Papers/AFF/'
 af2_cif_path = "cif/"
-offline = True
+offline = False
 
 models_path = 'Models/'
 
