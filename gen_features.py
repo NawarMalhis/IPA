@@ -221,28 +221,33 @@ def assemble_af2_features(in_ac, in_seq, dbg=True):
     features = {}
     ftr_lst = []
     _af = False
-    ac_list = get_ac_list(seq=in_seq)
-    # print(ac_list)
-    tmp_list = list(ac_list)
-    for ac in tmp_list:
-        if '.' in ac:
-            ac_list.remove(ac)
-            continue
-        if '-' in ac:
-            ac0 = ac.split('-')[0]
-            if ac0 not in ac_list:
-                ac_list.append(ac0)
-    for ac in ac_list:
-        if '.' in ac:
-            continue
-        if not os.path.isfile(f"{af2_cif_path}{ac}.cif"):
-            if download_cif:
+    if not offline:
+        ac_list = get_ac_list(seq=in_seq)
+        tmp_list = list(ac_list)
+        for ac in tmp_list:
+            if '.' in ac:
+                ac_list.remove(ac)
+                continue
+            if '-' in ac:
+                ac0 = ac.split('-')[0]
+                if ac0 not in ac_list:
+                    ac_list.append(ac0)
+        for ac in ac_list:
+            if '.' in ac:
+                continue
+            if not os.path.isfile(f"{af2_cif_path}{ac}.cif"):
                 get_af2(ac, part=1)
-        features_cif = gen_features_alpha_fold(in_ac=ac, in_seq=in_seq)
-        if features_cif is not None:
-            ftr_lst.append(features_cif)
-            _af = True
-            break
+            features_cif = gen_features_alpha_fold(in_ac=ac, in_seq=in_seq)
+            if features_cif is not None:
+                ftr_lst.append(features_cif)
+                _af = True
+                break
+    else:
+        if os.path.isfile(f"{af2_cif_path}{in_ac}.cif"):
+            features_cif = gen_features_alpha_fold(in_ac=in_ac, in_seq=in_seq)
+            if features_cif is not None:
+                ftr_lst.append(features_cif)
+                _af = True
     if not _af:
         return False, None
     features_p = gen_features_p(in_ac, in_seq, _w1=20, _w2=25, _skip=1)
